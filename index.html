@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Will You Be My Valentine?</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #ffe6e6; /* Cute pink background */
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            overflow: hidden; 
+        }
+
+        h1 {
+            color: #ff4d4d;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        /* Added ID to the image so we can change it easily */
+        .gif-container img {
+            width: 250px;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .buttons {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex-wrap: wrap; /* Allows buttons to stack on small screens */
+            justify-content: center;
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        #yesBtn {
+            background-color: #ff4d4d;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(255, 77, 77, 0.4);
+        }
+
+        #noBtn {
+            background-color: #ffffff;
+            color: #ff4d4d;
+            border: 2px solid #ff4d4d;
+        }
+
+        #success-message {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="question-container">
+        <div class="gif-container">
+            <img id="mainImage" src="https://media.tenor.com/K2yE4tY35X0AAAAi/mocha-bear.gif" alt="Cute Bear">
+        </div>
+        <h1 id="mainText">Will you be my Valentine?</h1>
+        <div class="buttons">
+            <button id="yesBtn" onclick="acceptLove()">Yes</button>
+            <button id="noBtn" onclick="handleNoClick()">No</button>
+        </div>
+    </div>
+
+    <div id="success-message">
+        <div class="gif-container">
+            <img src="https://media.tenor.com/gUiu1zyxfzYAAAAi/bear-kiss-bear-kisses.gif" alt="Happy Bear">
+        </div>
+        <h1>YAY! I knew you'd say yes! ❤️</h1>
+    </div>
+
+    <script>
+        let noClickCount = 0;
+        
+        // 1. LIST OF TEXTS (What the No button says)
+        const phrases = [
+            "No",
+            "Are you sure?",
+            "Really sure?",
+            "Pookie please...",
+            "Just think about it!",
+            "If you say no, I will be really sad...",
+            "I will be very very very sad...",
+            "Ok fine, I will stop asking...",
+            "Just kidding, say yes please! ❤️"
+        ];
+
+        // 2. LIST OF IMAGES (The reaction images)
+        // These change as the user clicks No more times
+        const imagePaths = [
+            "https://media.tenor.com/K2yE4tY35X0AAAAi/mocha-bear.gif",        // 0. Initial (Asking)
+            "https://media.tenor.com/ivKWdfdbV3EAAAAi/bear-cute-huniepop.gif", // 1. Shocked/Shy
+            "https://media.tenor.com/U5Fw_O__WlUAAAAi/panda-bear.gif",         // 2. Sad
+            "https://media.tenor.com/2V7-a3o5k8MAAAAi/mocha-mochi.gif",        // 3. Crying
+            "https://media.tenor.com/J3iJd_5t40MAAAAi/cute-cat.gif"            // 4. Pleading Cat
+        ];
+
+        function handleNoClick() {
+            const yesBtn = document.getElementById('yesBtn');
+            const noBtn = document.getElementById('noBtn');
+            const mainImage = document.getElementById('mainImage');
+
+            noClickCount++;
+
+            // A. Make Yes button bigger
+            let currentFontSize = parseFloat(window.getComputedStyle(yesBtn).fontSize);
+            yesBtn.style.fontSize = (currentFontSize * 1.5) + "px";
+            
+            // Increase padding to make the button physically larger
+            let currentPadding = 15 + (noClickCount * 10);
+            yesBtn.style.padding = currentPadding + "px " + (currentPadding * 2) + "px";
+
+            // B. Change the text on the No button
+            // The % operator loops back to the start if we run out of phrases
+            noBtn.innerText = phrases[Math.min(noClickCount, phrases.length - 1)];
+
+            // C. CHANGE THE IMAGE (This is the part you wanted!)
+            // We use Math.min to stay on the last image if they keep clicking
+            const imageIndex = Math.min(noClickCount, imagePaths.length - 1);
+            mainImage.src = imagePaths[imageIndex];
+        }
+
+        function acceptLove() {
+            document.getElementById('question-container').style.display = 'none';
+            document.getElementById('success-message').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
